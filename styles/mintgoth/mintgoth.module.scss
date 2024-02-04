@@ -1,0 +1,35 @@
+.background{
+    background-image: url("../../public/gothbg.png");
+    background-color: black;
+
+
+}
+
+.container{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    line-height: 13px;
+    text-align: center;
+    padding: 10px;
+    color:red;
+
+    .image{
+        margin: 14px;
+    }
+}
+
+.save{
+    font-size:24px;
+    padding:24px;
+    line-height: 36px;
+}
+
+.description{
+    padding:24px;
+    line-height: 21px;
+}
+

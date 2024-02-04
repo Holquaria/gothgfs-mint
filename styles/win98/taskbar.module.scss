@@ -1,0 +1,305 @@
+.mainContainer{
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: pinch-zoom;
+    background-image: url("../../public/gothgf.jpeg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: black;
+    position: relative;
+}
+
+.desktop{
+    flex-flow: column wrap;
+    overflow: visible;
+    width: 0px;
+    position: absolute;
+    display: flex;
+    place-items: flex-start;
+    margin: 20px;
+    //width: 80%;
+    //overflow: hidden;
+    max-height: calc(100% - 42px);
+
+    .icon{
+        width: 70px;
+        margin: 15px;
+        display: flex;
+        flex-direction: column;
+        -webkit-box-align: center;
+        align-items: center;
+
+        &:hover{
+            cursor: pointer;
+        }
+
+        .img{
+            &:hover{
+                filter: drop-shadow(blue 0px 0px)
+            } 
+        }
+
+        .textContainer{
+            font-size: 11px;
+            color: white;
+            text-shadow: black 0px 1px 1px;
+            margin-top: 5px;
+            display: flex;
+            -webkit-box-pack: center;
+            justify-content: center;
+            border: 1px solid transparent;
+
+            &:hover{
+                background-color: rgb(11, 97, 255);
+                border: 1px dotted darkgrey;
+            }
+
+            .text{
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 3;
+                max-height: 60px;
+                overflow: hidden;
+                padding: 0px 3px 2px;
+                background-color: transparent;
+                border: 1px solid transparent;
+                text-align: center;
+                flex-shrink: 1;
+
+                &::before{
+                    content: "";
+                    display: block;
+                    -webkit-box-flex: 1;
+                    flex-grow: 1;
+                }
+                
+                &::after{
+                    content: "";
+                    display: block;
+                    -webkit-box-flex: 1;
+                    flex-grow: 1;
+                }
+            }
+        }
+    }
+}
+
+
+.taskbar{
+    position: fixed;
+    width: 100%;
+    height: 37px;
+    border: none;
+    outline: none;
+    padding: 4px;
+    background: rgb(65, 7, 7);
+    box-shadow: rgb(0, 0, 0) -1px -1px 0px 0px inset, rgb(0, 0, 0) 1px 1px 0px 0px inset, rgb(0, 0, 0) -2px -2px 0px 0px inset, rgb(167, 0, 0) 2px 2px 0px 0px inset;
+    bottom: 0px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.start{
+    padding: 0px 6px;
+    justify-content: space-evenly;
+    font-family: Changa, sans-serif;
+    font-weight: bold;
+    font-style: italic;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 100%;
+    width: 80px;
+    font-size: 14px;
+    position: relative;
+    letter-spacing: 1px;
+    margin-right: 2px;
+    box-shadow: rgb(0, 0, 0) -1px -1px 0px 0px inset, rgb(0, 0, 0) 1px 1px 0px 0px inset, rgb(0, 0, 0) -2px -2px 0px 0px inset, rgb(167, 0, 0) 2px 2px 0px 0px inset;
+
+    &:hover {
+        cursor: pointer;
+      }
+}
+
+.menuActive{
+    background-color: rgb(65, 7, 7);
+    background-image: linear-gradient(
+        45deg, rgb(239, 238, 240) 25%, transparent 25%, transparent 75%, rgb(239, 238, 240) 75%, rgb(239, 238, 240)), linear-gradient(
+        45deg, rgb(239, 238, 240) 25%, transparent 25%, transparent 75%, rgb(239, 238, 240) 75%, rgb(239, 238, 240));
+            background-size: 2px 2px;
+            background-position: 0px 0px, 1px 1px;
+            box-shadow: white -1px -1px 0px 0px inset, rgb(70 65 71) 1px 1px 0px 0px inset, rgb(222 220 222) -2px -2px 0px 0px inset, rgb(202 198 203) 2px 2px 0px 0px inset;
+}
+
+.startMenu{
+    position: absolute;
+    left: 0px;
+    bottom: 100%;
+
+    .startMenuItems{
+        font-size: 11px;
+        display: flex;
+        width: 200px;
+        flex-direction: column;
+        -webkit-box-align: center;
+        align-items: center;
+        background: rgb(65, 7, 7);
+        box-shadow: rgb(12 12 12) -1px -1px 0px inset, rgb(187 195 196) 1px 1px 0px inset, rgb(128 128 136) -2px -2px 0px inset, rgb(255 255 255) 2px 2px 0px inset;
+
+        .menuCont{
+            display: flex;
+            width: 100%;
+            padding: 0px 4px;
+            flex-direction: column;
+            margin: 4px;
+            position: relative;
+
+            .item{
+                display: flex;
+                flex-direction: row;
+                height: 28px;
+                &:hover {
+                    color: white;
+                    background-color: rgb(38, 110, 187);
+                    cursor: pointer;
+                }
+
+                .img{
+                    width: 16px;
+                    height: 16px;
+                    margin: 5px;
+                    align-self: center;
+                }
+
+                .texts{
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    -webkit-box-pack: center;
+                    justify-content: center;
+                    height: 100%;
+                    position: relative;
+                    color: white;
+
+                }
+            }
+        }
+    }
+}
+
+.active{
+    display: block;
+}
+
+.inactive{
+    display:none;
+}
+
+.divbar{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex-direction: row;
+    height: 100%;
+    margin: 0px 2px;
+
+    :first-child {
+        height: 100%;
+        width: 1px;
+        margin: 2px;
+        background-color: rgb(128, 128, 136);
+        content: "";
+        box-shadow: rgb(255 255 255) 1px 0px 0px;
+    }
+
+    :nth-child(2) {
+        height: calc(100% - 6px);
+        width: 3px;
+        margin-left: 2px;
+        background-color: rgb(202, 198, 203);
+        content: "";
+        box-shadow: rgb(128 128 136) -1px -1px 0px inset, rgb(255 255 255) 1px 1px 0px inset;
+    }
+}
+
+.taskbar_window{
+    flex: 1 1 0%;
+    max-width: 150px;
+    color: rgb(0, 0, 0);
+    height: 100%;
+    font-size: 11px;
+    position: relative;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    cursor: default;
+    margin-left: 4px;
+    box-shadow: rgb(70 65 71) -1px -1px 0px 0px inset, white 1px 1px 0px 0px inset, rgb(160 153 161) -2px -2px 0px 0px inset, rgb(222 220 222) 2px 2px 0px 0px inset;
+
+    &.focus{
+        background-color: rgb(202, 198, 203);
+            background-image: linear-gradient(
+        45deg, rgb(239, 238, 240) 25%, transparent 25%, transparent 75%, rgb(239, 238, 240) 75%, rgb(239, 238, 240)), linear-gradient(
+        45deg, rgb(239, 238, 240) 25%, transparent 25%, transparent 75%, rgb(239, 238, 240) 75%, rgb(239, 238, 240));
+            background-size: 2px 2px;
+            background-position: 0px 0px, 1px 1px;
+            box-shadow: white -1px -1px 0px 0px inset, rgb(70 65 71) 1px 1px 0px 0px inset, rgb(222 220 222) -2px -2px 0px 0px inset, rgb(202 198 203) 2px 2px 0px 0px inset;
+    }
+    .taskbar_icon{
+        display: inline;
+        padding: 0px 8px;
+    }
+
+    .taskbar_text{
+        //position: absolute;
+        left: 30px;
+        right: 8px;
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.hide{
+    display: none !important;
+}
+
+.walletStatus{
+    align-items: center;
+    color: rgb(255, 255, 255);
+    height: 100px;
+    //overflow: hidden;
+    display: flex;
+    width: 100%;
+    background: #cac6cb;
+    box-shadow: #0c0c0c -1px -1px 0px inset, #bbc3c4 1px 1px 0px inset, #808088 -2px -2px 0px inset, white 2px 2px 0px inset;
+    flex-direction: column;
+
+    header{
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        width: 100%;
+        padding: 5px;
+
+        span{
+            margin: 0px 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-shadow: rgb(0 0 0 / 70%) 1px 1px;
+            font-weight: 600;
+        }
+    }
+}

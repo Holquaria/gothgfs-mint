@@ -1,0 +1,98 @@
+.windowUI{
+    background: linear-gradient(90deg,#111827,#ec2367);
+}
+
+.hidden{
+    display:none !important;
+}
+
+.address_bar{
+    display: flex;
+    align-items: center;
+    margin: 2px 0;
+    flex-shrink: 0;
+
+    .div_bar{
+        margin: 0 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: row;
+        height: 18px;
+        width: 3px;
+        background-color: #cac6cb;
+        content: "";
+        box-shadow: inset -1px -1px 0 #808088, inset 1px 1px 0 #fff;
+    }
+
+    .address_bar_title {
+        padding: 4px;
+        color: #808088;
+    }
+
+    .address_bar_content {
+        flex: 1 1;
+        min-width: 0;
+        background-color: #fff;
+        height: 22px;
+        box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 0 #808088, inset -2px -2px 0 #bbc3c4, inset 2px 2px 0 0 #0c0c0c;
+        display: inline-block;
+
+        .address_bar_content_text {
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            padding: 2px;
+
+            .address_bar img {
+                width: 14px;
+                height: 14px;
+                display: inline;
+                order: 1;
+                margin: 0 4px;
+            }
+
+            .address_bar_buttons {
+                white-space: nowrap;
+                margin-left: auto;
+                order: 3;
+            }
+        }
+
+        span {
+            order: 2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 4px;
+        }
+    }
+}
+
+.windowContent{
+    cursor: default;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #cac6cb;
+    position: relative;
+    padding: 2px 2px 0;
+    box-shadow: inset -1px -1px 0 0 #dedcde, inset 1px 1px 0 0 #a099a1, inset -2px -2px 0 0 #cac6cb, inset 2px 2px 0 0 #464147;
+}
+
+.windowContentInner{
+   // position: absolute;
+   // width: calc(100% - 4px);
+    border-bottom: 1px solid #dedcde;
+    max-height: 500px;
+    overflow: auto;
+    background-color: #fff;
+}
+
+.logo{
+
+}
