@@ -169,14 +169,14 @@ function Boot() {
   return (
     <>
       <Head>
-        <title>GOTH GF</title>
-        <meta name="description" content="GOTH GIRLFRIEND NFT MINT " />
+        <title>GOTH GIRLFRIENDS</title>
+        <meta name="description" content="GOTH GIRLFRIENDS NFT MINT " />
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
         />
         <link rel="stylesheet" href="https://unpkg.com/98.css" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/fire.gif" />
       </Head>
       <div className={styles.mainContainer}>
         <Toaster />
