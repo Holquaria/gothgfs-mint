@@ -27,8 +27,8 @@ export default function Winamp ({closed, closeWindow}: {closed: boolean, closeWi
             const webamp = new Webamp({
               initialTracks: [{
                 metaData: {
-                  artist: "Internet",
-                  title: "Dial-Up",
+                  artist: "My Chemical Romance",
+                  title: "Welcome To The Black Parade",
                 },
                 url: "/black-parade.mp3"
               }],
