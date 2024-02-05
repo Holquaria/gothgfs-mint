@@ -410,7 +410,7 @@ function Boot() {
                 </div>
                 <div className={styles.texts}>Paint</div>
               </div>
-              <div
+              {/* <div
                 className={styles.item}
                 onClick={() => openWindow("CONFIGURATOR")}
               >
@@ -419,7 +419,7 @@ function Boot() {
                   <Image width={16} height={16} src={userImg} alt="comp" />
                 </div>
                 <div className={styles.texts}>Configurator</div>
-              </div>
+              </div> */}
               <div className={styles.item} onClick={() => openWindow("WINAMP")}>
                 <div style={{ margin: "7px" }}>
                   {" "}
