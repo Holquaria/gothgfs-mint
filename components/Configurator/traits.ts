@@ -565,4 +565,4 @@ const traits = {
     }
   }
 
-  export default traits;
+export { traits };

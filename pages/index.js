@@ -220,7 +220,7 @@ function Boot() {
               <div className={styles.text}>PAINT</div>
             </div>
           </div>
-          {/* <div
+          <div
             className={styles.icon}
             onClick={() => openWindow("CONFIGURATOR")}
           >
@@ -228,7 +228,7 @@ function Boot() {
             <div className={styles.textContainer}>
               <div className={styles.text}>CONFIGURATOR</div>
             </div>
-          </div> */}
+          </div>
           <div
             className={styles.icon}
             onClick={() => openWindow("WINAMP", totalWindows.WINAMP.opened)}
@@ -338,7 +338,7 @@ function Boot() {
               {connected ? (
                 <div className="flex items-end mr-2">
                   <p className="text-xs text-black"></p>
-                  <p className="mx-1 font-bold text-purple-600 leading-none">
+                  <p className="mx-1 font-bold leading-none text-purple-600">
                     {balance.toFixed(2)}
                   </p>
                   <p

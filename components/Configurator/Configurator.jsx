@@ -3,9 +3,15 @@ import Image from "next/image";
 import divider from "../../public/div.png";
 import configuratorStyles from "../../styles/configurator/configurator.module.scss";
 import styles from "../../styles/mintgoth/mintgoth.module.scss";
-import traits from "./traits";
+import { traits } from "./traits";
 import { generateGoth } from "./generate-img";
 import { useForm } from "react-hook-form";
+
+console.log(traits)
+
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 const categories = Object.keys(traits).reverse();
 
@@ -34,7 +40,19 @@ export default function Configurator() {
         value: e[key],
       }))
       .filter((t) => t.value !== "None");
-    await generateGoth(mapped).then((b64) => {
+    console.log(selectableCategories);
+    const randomResult = selectableCategories.map(category => {
+      const numberOfTraits = Object.keys(traits[category]).length;
+      const traitNr = randomInteger(0, numberOfTraits - 1);
+      const probability = Math.random();
+      const selectedTrait = Object.entries(traits[category])[traitNr];
+      // todo: fix this by calculating min/max based on the probability
+      const isSelected = probability >= selectedTrait[1];
+      return { trait_type: category, value: isSelected ? selectedTrait[0] : "None" };
+    });
+    console.log(randomResult);
+    debugger
+    await generateGoth(randomResult).then((b64) => {
       ref.current.src = b64;
       setImgSrc(b64);
       document.body.style.cursor = "unset";
