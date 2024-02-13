@@ -5,9 +5,6 @@ import configuratorStyles from "../../styles/configurator/configurator.module.sc
 import styles from "../../styles/mintgoth/mintgoth.module.scss";
 import { traits } from "./traits";
 import { generateGoth } from "./generate-img";
-import { useForm } from "react-hook-form";
-
-console.log(traits)
 
 function randomInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -27,59 +24,56 @@ const downloadImage = (src) => {
   document.body.removeChild(a);
 };
 export default function Configurator() {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
   const ref = useRef(null);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = async (e) => {
+  function getRandomLayer(data, category) {
+    let matchedLayer = "None";
+
+    const dataWithRanges = {};
+    let lastValue = 0;
+    for (const section of Object.keys(data)) {
+      if (!dataWithRanges[section]) {
+        dataWithRanges[section] = {
+          min: lastValue,
+          max: data[section] + lastValue,
+        };
+      }
+      lastValue = data[section] + lastValue;
+    }
+
+    const random = Math.random();
+
+    for (const section of Object.keys(dataWithRanges)) {
+      const range = dataWithRanges[section];
+      if (random >= range.min && random <= range.max) {
+        matchedLayer = section;
+        break;
+      }
+    }
+    return { trait_type: category, value: matchedLayer };
+  }
+
+  const onSubmit = async () => {
+    setIsInitialLoad(false);
     setLoading(true);
     document.body.style.cursor = "wait";
-    const mapped = Object.keys(e)
-      .map((key) => ({
-        trait_type: key,
-        value: e[key],
-      }))
-      .filter((t) => t.value !== "None");
-    console.log(selectableCategories);
-    const randomResult = selectableCategories.map(category => {
-      const numberOfTraits = Object.keys(traits[category]).length;
-      const traitNr = randomInteger(0, numberOfTraits - 1);
-      const probability = Math.random();
-      const selectedTrait = Object.entries(traits[category])[traitNr];
-      // todo: fix this by calculating min/max based on the probability
-      const isSelected = probability >= selectedTrait[1];
-      return { trait_type: category, value: isSelected ? selectedTrait[0] : "None" };
-    });
-    console.log(randomResult);
-    debugger
-    await generateGoth(randomResult).then((b64) => {
-      ref.current.src = b64;
+    const layers = [];
+    for (const category of selectableCategories) {
+      const randomLayer = getRandomLayer(traits[category], category);
+      layers.push(randomLayer);
+    }
+    await generateGoth(layers).then((b64) => {
+      // ref.current.src = b64;
       setImgSrc(b64);
       document.body.style.cursor = "unset";
     });
     setLoading(false);
   };
 
-  const getOptions = (category) => {
-    // console.log(traits[category])
-    if (!traits[category]) {
-      return;
-    }
-    const keys = Object.keys(traits[category]);
-    // console.log(keys)
-    return (
-      <>
-        <option value="None">None</option>
-        {keys.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </>
-    );
-  };
-
   useEffect(() => {}, [ref]);
+
   return (
     <div className={styles.background}>
       <div>
@@ -94,64 +88,71 @@ export default function Configurator() {
             />
           </div>
           <div style={{ marginBottom: "1rem 0 2rem", background: "white" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={ref}
-              className={styles.image}
-              width={300}
-              height={300}
-              src="/goths.gif"
-              alt="Save Goth"
-            />
+            {isInitialLoad && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src="/goths.gif"
+                className={styles.image}
+                width={300}
+                height={300}
+                alt="Save Goth"
+              />
+            )}
+            {!isInitialLoad && !loading ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                ref={ref}
+                src={imgSrc}
+                className={styles.image}
+                width={300}
+                height={300}
+                alt="Save Goth"
+              />
+            ) : (<></>)}
+            {!isInitialLoad && loading ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <div
+                style={{
+                  width: 328,
+                  height: 328,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Loading...
+              </div>
+            ) : (<></>)}
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "column",
-                gap: "0.5rem",
-                margin: "1rem 0",
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "column",
+              gap: "0.5rem",
+              margin: "1rem 0",
+            }}
+          >
+            <button
+              style={{ background: "#cac6cb", display: "block" }}
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit();
               }}
             >
+              Generate
+            </button>
+            {imgSrc && (
               <button
                 type="submit"
+                onClick={() => downloadImage(imgSrc)}
                 style={{ background: "#cac6cb", display: "block" }}
               >
-                Submit
+                Download
               </button>
-              {imgSrc && (
-                <button
-                  type="submit"
-                  onClick={() => downloadImage(imgSrc)}
-                  style={{ background: "#cac6cb", display: "block" }}
-                >
-                  Download
-                </button>
-              )}
-            </div>
-            <div className={configuratorStyles["form-grid"]}>
-              {selectableCategories.map((category) => {
-                return (
-                  <div
-                    key={category}
-                    className={configuratorStyles["flex-col"]}
-                  >
-                    <label
-                      htmlFor={category}
-                      className={configuratorStyles.label}
-                    >
-                      {category}
-                    </label>
-                    <select {...register(category)} name={category}>
-                      {getOptions(category)}
-                    </select>
-                  </div>
-                );
-              })}
-            </div>
-          </form>
+            )}
+          </div>
           <div style={{ padding: "25px" }}>
             <Image
               className={styles.image}
