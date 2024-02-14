@@ -5,23 +5,23 @@ import configuratorStyles from "../../styles/configurator/configurator.module.sc
 import styles from "../../styles/mintgoth/mintgoth.module.scss";
 import { traits } from "./traits";
 import { generateGoth } from "./generate-img";
-import html2canvas from 'html2canvas';
-import { saveAs } from 'file-saver';
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
 
 const saveDivAsImage = () => {
-  const cardContainer = document.getElementById('cardContainer');
+  const cardContainer = document.getElementById("cardContainer");
 
-  html2canvas(cardContainer).then(canvas => {
-    canvas.toBlob(blob => {
-      saveAs(blob, 'card_image.png');
+  html2canvas(cardContainer).then((canvas) => {
+    canvas.toBlob((blob) => {
+      saveAs(blob, "card_image.png");
     });
   });
 };
 
 function randomInteger(min, max) {
   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  console.log(randomNumber)
-  return randomNumber
+  console.log(randomNumber);
+  return randomNumber;
 }
 
 const gothicChatUpLines = [
@@ -74,14 +74,13 @@ const gothicChatUpLines = [
   "Are you a vampire?\nBecause I feel like you've sucked all the air out of the room, and I can't breathe.",
   "Do you have a taste for the macabre?\nBecause I find you irresistible.",
   "Is your love cursed?\nBecause I can't seem to escape its spell.",
-  "Are you a ghost?\nBecause you've been haunting my thoughts all night long."
+  "Are you a ghost?\nBecause you've been haunting my thoughts all night long.",
 ];
 
 const generateText = () => {
-  const randomNumber = randomInteger(1, 50)
-  return gothicChatUpLines[randomNumber]
-}
-
+  const randomNumber = randomInteger(1, 50);
+  return gothicChatUpLines[randomNumber];
+};
 
 const categories = Object.keys(traits).reverse();
 
@@ -160,58 +159,69 @@ export default function Configurator() {
               alt="divider"
             />
           </div>
-          <div className={styles.cardContainer}>
-    
-          </div>
-          <div className={styles.cardContainer} id="cardContainer" style={{ marginBottom: "1rem 0 2rem" }}>
-            {isInitialLoad && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src="/goths.gif"
-                className={styles.image}
-                width={300}
-                height={300}
-                alt="Save Goth"
-              />
-            )}
-            {!isInitialLoad && !loading ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                ref={ref}
-                src={imgSrc}
-                className={styles.image}
-                width={300}
-                height={300}
-                alt="Save Goth"
-              />
-            ) : (<></>)}
+          {isInitialLoad && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/goths.gif"
+              className={styles.image}
+              width={300}
+              height={300}
+              alt="Save Goth"
+            />
+          )}
+          {!isInitialLoad && (
+            <div
+              className={styles.cardContainer}
+              id="cardContainer"
+              style={{ marginBottom: "1rem 0 2rem" }}
+            >
+              {!isInitialLoad && !loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  ref={ref}
+                  src={imgSrc}
+                  className={styles.image}
+                  width={300}
+                  height={300}
+                  alt="Save Goth"
+                />
+              ) : (
+                <></>
+              )}
               {!isInitialLoad && !loading ? (
                 <p className="cardText">{generateText()}</p>
-              ) : (<></>)}
-            {!isInitialLoad && !loading ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <Image
-                src="/generator/Background/Pink.png"
-                className={styles.backgroundImage}
-                alt="Save Goth"
-                layout="fill"
-              />
-            ) : (<></>)}
-            {!isInitialLoad && loading ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <div
-                style={{
-                  width: 328,
-                  height: 328,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                Loading...
-              </div>
-            ) : (<></>)}
-          </div>
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && !loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <Image
+                  src="/generator/Background/Pink.png"
+                  className={styles.backgroundImage}
+                  alt="Save Goth"
+                  layout="fill"
+                />
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <div
+                  style={{
+                    width: 328,
+                    height: 328,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  Loading...
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          )}
 
           <div
             style={{
