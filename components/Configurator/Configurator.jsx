@@ -3,9 +3,92 @@ import Image from "next/image";
 import divider from "../../public/div.png";
 import configuratorStyles from "../../styles/configurator/configurator.module.scss";
 import styles from "../../styles/mintgoth/mintgoth.module.scss";
-import traits from "./traits";
+import { traits } from "./traits";
 import { generateGoth } from "./generate-img";
-import { useForm } from "react-hook-form";
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
+
+const saveDivAsImage = () => {
+  const cardContainer = document.getElementById("cardContainer");
+
+  html2canvas(cardContainer).then((canvas) => {
+    canvas.toBlob((blob) => {
+      saveAs(blob, "card_image.png");
+    });
+  });
+};
+
+function randomInteger(min, max) {
+  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+  console.log(randomNumber);
+  return randomNumber;
+}
+
+const gothicChatUpLines = [
+  "Are you a vampire?\nBecause you've got my heart racing.",
+  "Do you believe in love at first bite?\nYou must have been buried in a past life because you've got 'undying love' written all over you.",
+  "Are you a ghost?\nBecause you've been haunting my dreams.",
+  "Do you have a map?\nBecause I just got lost in your eyes, and now I can't find my way out.",
+  "Are you a banshee?\nBecause your screams are music to my ears.",
+  "If beauty were time,\nyou'd be an eternity.",
+  "Is your name Morticia?\nBecause you're drop dead gorgeous.",
+  "Do you have a reflection?\nBecause every time I look at you, I see perfection.",
+  "Are you a werewolf?\nBecause when I look into your eyes, I feel a howl coming on.",
+  "Do you like graveyards?\nBecause I could spend eternity with you in one.",
+  "Is your heart as cold as your touch?\nBecause I'm willing to risk frostbite to hold your hand.",
+  "Do you believe in curses?\nBecause I think I've been cursed to be in love with you.",
+  "Are you a creature of the night?\nBecause you've bewitched me.",
+  "If you were a vampire,\nyou'd have my neck in a heartbeat.",
+  "Are you made of darkness?\nBecause every time I'm around you, I feel consumed by your presence.",
+  "Do you like dark alleys?\nBecause I'd love to take a moonlit stroll with you in one.",
+  "Is it just me, or is it getting colder in here?\nOh wait, that's just your chilling presence.",
+  "Are you a ghoul?\nBecause I can't take my eyes off of you, even though it's making my blood run cold.",
+  "Do you believe in soulmates?\nBecause I think I've found mine in you.",
+  "Are you a vampire slayer?\nBecause you've staked a claim on my heart.",
+  "Do you have a taste for danger?\nBecause I'm irresistible to all things forbidden.",
+  "Is your love eternal?\nBecause I'd willingly spend forever with you.",
+  "Are you a shadow?\nBecause you've been following me in my dreams.",
+  "If looks could kill,\nyou'd be the death of me.",
+  "Are you a poltergeist?\nBecause you've been haunting my thoughts all night.",
+  "Do you like midnight picnics?\nBecause I'd love to share a feast with you under the stars.",
+  "Is your love like a ghost?\nBecause it's haunting me day and night.",
+  "Are you a witch?\nBecause every time I'm near you, I feel under your spell.",
+  "Do you have a graveyard shift?\nBecause I'd stay up all night just to be with you.",
+  "Are you a creature of the night?\nBecause I can't seem to resist your dark allure.",
+  "If you were a bat,\nI'd let you hang around me anytime.",
+  "Are you a fallen angel?\nBecause you've fallen straight into my heart.",
+  "Do you like foggy nights?\nBecause I'd love to get lost with you in one.",
+  "Is your love cursed?\nBecause I can't escape its enchantment.",
+  "Are you a vampire?\nBecause I'm dying to taste your forbidden love.",
+  "Do you like haunted houses?\nBecause I'd love to explore one with you, hand in hand.",
+  "Are you nocturnal?\nBecause I find myself thinking about you even in the darkest hours of the night.",
+  "Is your heart as cold as the grave?\nBecause I'm drawn to it like a moth to flame.",
+  "Do you have a dark side?\nBecause I'm drawn to the shadows you cast.",
+  "Are you a creature of the night?\nBecause I'm under your spell.",
+  "Do you have a pulse?\nBecause mine races every time I see you.",
+  "Are you a vampire?\nBecause you've got my blood boiling.",
+  "Do you like moonlit walks?\nBecause I'd love to take one with you, forever.",
+  "Is your love like a ghost?\nBecause it's haunting me wherever I go.",
+  "Are you a banshee?\nBecause every time I hear your voice, it's like music to my ears.",
+  "Do you believe in reincarnation?\nBecause I think we've been lovers in past lives.",
+  "Are you a vampire?\nBecause I feel like you've sucked all the air out of the room, and I can't breathe.",
+  "Do you have a taste for the macabre?\nBecause I find you irresistible.",
+  "Is your love cursed?\nBecause I can't seem to escape its spell.",
+  "Are you a ghost?\nBecause you've been haunting my thoughts all night long.",
+];
+
+const generateText = () => {
+  const randomNumber = randomInteger(1, 50);
+  const chatUpLine = gothicChatUpLines[randomNumber];
+  const [setup, punchline] = chatUpLine.split('\n');
+  return (
+  <div>
+    <p>{setup}</p>
+    <br />
+    <p>{punchline}</p>
+  </div>
+  );
+};
 
 const categories = Object.keys(traits).reverse();
 
@@ -21,127 +104,151 @@ const downloadImage = (src) => {
   document.body.removeChild(a);
 };
 export default function Configurator() {
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
   const ref = useRef(null);
-  const { register, handleSubmit } = useForm();
-  const onSubmit = async (e) => {
+  function getRandomLayer(data, category) {
+    let matchedLayer = "None";
+
+    const dataWithRanges = {};
+    let lastValue = 0;
+    for (const section of Object.keys(data)) {
+      if (!dataWithRanges[section]) {
+        dataWithRanges[section] = {
+          min: lastValue,
+          max: data[section] + lastValue,
+        };
+      }
+      lastValue = data[section] + lastValue;
+    }
+
+    const random = Math.random();
+
+    for (const section of Object.keys(dataWithRanges)) {
+      const range = dataWithRanges[section];
+      if (random >= range.min && random <= range.max) {
+        matchedLayer = section;
+        break;
+      }
+    }
+    return { trait_type: category, value: matchedLayer };
+  }
+
+  const onSubmit = async () => {
+    setIsInitialLoad(false);
     setLoading(true);
     document.body.style.cursor = "wait";
-    const mapped = Object.keys(e)
-      .map((key) => ({
-        trait_type: key,
-        value: e[key],
-      }))
-      .filter((t) => t.value !== "None");
-    await generateGoth(mapped).then((b64) => {
-      ref.current.src = b64;
+    const layers = [];
+    for (const category of selectableCategories) {
+      const randomLayer = getRandomLayer(traits[category], category);
+      layers.push(randomLayer);
+    }
+    await generateGoth(layers).then((b64) => {
+      // ref.current.src = b64;
       setImgSrc(b64);
       document.body.style.cursor = "unset";
     });
     setLoading(false);
   };
 
-  const getOptions = (category) => {
-    // console.log(traits[category])
-    if (!traits[category]) {
-      return;
-    }
-    const keys = Object.keys(traits[category]);
-    // console.log(keys)
-    return (
-      <>
-        <option value="None">None</option>
-        {keys.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </>
-    );
-  };
-
   useEffect(() => {}, [ref]);
+
   return (
     <div className={styles.background}>
       <div>
         <div className={styles.container + " " + configuratorStyles.container}>
-          <div style={{ transform: "scaleY(-1)", padding: "25px" }}>
-            <Image
-              className={styles.image}
-              width={500}
-              height={107}
-              src={divider}
-              alt="divider"
-            />
-          </div>
-          <div style={{ marginBottom: "1rem 0 2rem", background: "white" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
+          {isInitialLoad && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
-              ref={ref}
+              src="/goths.gif"
               className={styles.image}
               width={300}
               height={300}
-              src="/goths.gif"
               alt="Save Goth"
             />
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)}>
+          )}
+          {!isInitialLoad && (
             <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                flexDirection: "column",
-                gap: "0.5rem",
-                margin: "1rem 0",
-              }}
+              className={styles.cardContainer}
+              id="cardContainer"
+              style={{ marginBottom: "1rem 0 2rem" }}
             >
-              <button
-                type="submit"
-                style={{ background: "#cac6cb", display: "block" }}
-              >
-                Submit
-              </button>
-              {imgSrc && (
-                <button
-                  type="submit"
-                  onClick={() => downloadImage(imgSrc)}
-                  style={{ background: "#cac6cb", display: "block" }}
+              {!isInitialLoad && !loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  ref={ref}
+                  src={imgSrc}
+                  className={styles.image}
+                  width={300}
+                  height={300}
+                  alt="Save Goth"
+                />
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && !loading ? (
+                <p id="cardText" className="cardText">{generateText()}</p>
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && !loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <Image
+                  src="/generator/Background/Pink.png"
+                  className={styles.backgroundImage}
+                  alt="Save Goth"
+                  layout="fill"
+                />
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && loading ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <div
+                  style={{
+                    width: 328,
+                    height: 328,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                 >
-                  Download
-                </button>
+                  Loading...
+                </div>
+              ) : (
+                <></>
               )}
             </div>
-            <div className={configuratorStyles["form-grid"]}>
-              {selectableCategories.map((category) => {
-                return (
-                  <div
-                    key={category}
-                    className={configuratorStyles["flex-col"]}
-                  >
-                    <label
-                      htmlFor={category}
-                      className={configuratorStyles.label}
-                    >
-                      {category}
-                    </label>
-                    <select {...register(category)} name={category}>
-                      {getOptions(category)}
-                    </select>
-                  </div>
-                );
-              })}
-            </div>
-          </form>
-          <div style={{ padding: "25px" }}>
-            <Image
-              className={styles.image}
-              width={500}
-              height={107}
-              src={divider}
-              alt="divider"
-            />
+          )}
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              flexDirection: "column",
+              gap: "0.5rem",
+              margin: "1rem 0",
+            }}
+          >
+            <button
+              style={{ background: "#cac6cb", display: "block" }}
+              onClick={(e) => {
+                e.preventDefault();
+                onSubmit();
+              }}
+            >
+              Generate
+            </button>
+            {imgSrc && (
+              <button
+                type="submit"
+                onClick={saveDivAsImage}
+                style={{ background: "#cac6cb", display: "block" }}
+              >
+                Download
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -10,6 +10,11 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+@font-face {
+  font-family: 'Amador';
+  src: url('/fonts/Amador-W01-Regular.ttf') format('truetype');
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -17,4 +22,16 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#cardText {
+  color: black;
+  margin-right: 10px;
+  z-index: 2;
+  position: relative;
+  font-family: 'Amador';
+  font-size: x-large;
+  margin-right: 30px;
+  line-height: 1.5;
+  text-shadow: black;
 }
