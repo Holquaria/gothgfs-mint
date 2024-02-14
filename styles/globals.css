@@ -15,6 +15,11 @@ body {
   src: url('/fonts/Amador-W01-Regular.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'vinque';
+  src: url('/fonts/vinque.otf') format('opentype');
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -26,12 +31,11 @@ a {
 
 #cardText {
   color: black;
-  margin-right: 10px;
   z-index: 2;
   position: relative;
-  font-family: 'Amador';
+  font-family: 'vinque';
   font-size: x-large;
-  margin-right: 30px;
+  padding: 10px;
   line-height: 1.5;
   text-shadow: black;
 }
