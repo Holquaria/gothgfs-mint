@@ -14,6 +14,7 @@ import fire from "../public/fire.gif";
 import winampLogo from "../public/winamp-logo.png";
 import computer from "../public/computer.ico";
 import userImg from "../public/users.png";
+import pixelheart from "../public/pixelheart.webp";
 import discord from "../public/discord-og.png";
 import twitter from "../public/twitter-og.png";
 import { useDetectOutsideClick } from "../hooks/useDetectOutsideClick";
@@ -82,8 +83,8 @@ function Boot() {
     CONFIGURATOR: {
       opened: false,
       minimized: false,
-      label: "CONFIGURATOR",
-      icon: userImg,
+      label: "HAPPY VALENTINES DAY",
+      icon: pixelheart,
       mockPath: "",
       zIndex: 0,
     },
@@ -161,8 +162,8 @@ function Boot() {
   };
 
   React.useEffect(() => {
-    if (window.location.pathname === '/events') {
-      openWindow('EXLUSIVE_CONTENT')
+    if (window.location.pathname === '/') {
+      openWindow('CONFIGURATOR')
     }
   }, [])
 
@@ -224,9 +225,9 @@ function Boot() {
             className={styles.icon}
             onClick={() => openWindow("CONFIGURATOR")}
           >
-            <Image width={32} height={32} src={userImg} alt="paint" />
+            <Image width={32} height={32} src={pixelheart} alt="paint" />
             <div className={styles.textContainer}>
-              <div className={styles.text}>CONFIGURATOR</div>
+              <div className={styles.text}>HAPPY VALENTINES DAY</div>
             </div>
           </div>
           <div
@@ -316,7 +317,7 @@ function Boot() {
             hidePath
             toggleWindow={() => openWindow("CONFIGURATOR")}
             exitWindow={() => openWindow("CONFIGURATOR", true)}
-            title={"CONFIGURATOR"}
+            title={"HAPPY VALENTINES DAY"}
             content={<Configurator />}
           />
         )}
