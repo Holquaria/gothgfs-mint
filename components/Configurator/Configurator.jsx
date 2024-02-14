@@ -81,6 +81,7 @@ export default function Configurator() {
   const [error, setError] = useState(false);
   const ref = useRef(null);
   const [generatedImage, setGeneratedImage] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState("")
   
   const downloadImage = () => {
     const link = document.createElement("a");
@@ -98,6 +99,37 @@ export default function Configurator() {
       setGeneratedImage(imageData);
     });
   };
+
+  const getBackgroundImage = () => {
+    const number = randomInteger(0, 8)
+    function getWordByNumber(number) {
+      switch (number) {
+        case 0:
+          return "Beige";
+        case 1:
+          return "Galactic";
+        case 2:
+          return "Green";
+        case 3:
+          return "Orange";
+        case 4:
+          return "Pink";
+        case 5:
+          return "Purple";
+        case 6:
+          return "Red";
+        case 7:
+          return "Teal";
+        case 8:
+          return "Yellow";
+        default:
+          return "Invalid number";
+      }
+    }
+
+    const string = getWordByNumber(number)
+    setBackgroundImage(`/generator/Background/${string}.png`)
+  }
 
   function getRandomLayer(data, category) {
     let matchedLayer = "None";
@@ -147,6 +179,7 @@ export default function Configurator() {
       layers.push(randomLayer);
     }
     generateText();
+    getBackgroundImage();
     await generateGoth(layers)
       .then((b64) => {
         // ref.current.src = b64;
@@ -160,6 +193,7 @@ export default function Configurator() {
   };
 
   useEffect(() => {}, [ref]);
+  console.log(backgroundImage)
 
   return (
     <div className={styles.background}>
@@ -256,7 +290,7 @@ export default function Configurator() {
                       {!isInitialLoad && !loading ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <Image
-                          src="/generator/Background/Pink.png"
+                          src={backgroundImage}
                           className={styles.backgroundImage}
                           alt="Save Goth"
                           layout="fill"
