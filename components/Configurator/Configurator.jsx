@@ -12,11 +12,19 @@ const saveDivAsImage = () => {
   const cardContainer = document.getElementById("cardContainer");
 
   html2canvas(cardContainer).then((canvas) => {
-    canvas.toBlob((blob) => {
-      saveAs(blob, "card_image.png");
-    });
+    // Convert canvas to data URL
+    const dataUrl = canvas.toDataURL();
+    
+    // Create a temporary link element
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = "card_image.png";
+
+    // Programmatically trigger a click on the link to initiate download
+    link.click();
   });
 };
+
 
 function randomInteger(min, max) {
   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -77,18 +85,6 @@ const gothicChatUpLines = [
   "Are you a ghost?\nBecause you've been haunting my thoughts all night long.",
 ];
 
-const generateText = () => {
-  const randomNumber = randomInteger(1, 50);
-  const chatUpLine = gothicChatUpLines[randomNumber];
-  const [setup, punchline] = chatUpLine.split('\n');
-  return (
-  <div>
-    <p>{setup}</p>
-    <br />
-    <p>{punchline}</p>
-  </div>
-  );
-};
 
 const categories = Object.keys(traits).reverse();
 
@@ -107,10 +103,11 @@ export default function Configurator() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
+  const [lines, setLines] = useState({line1: "", line2: ""})
   const ref = useRef(null);
   function getRandomLayer(data, category) {
     let matchedLayer = "None";
-
+    
     const dataWithRanges = {};
     let lastValue = 0;
     for (const section of Object.keys(data)) {
@@ -123,8 +120,10 @@ export default function Configurator() {
       lastValue = data[section] + lastValue;
     }
 
+    
+    
     const random = Math.random();
-
+    
     for (const section of Object.keys(dataWithRanges)) {
       const range = dataWithRanges[section];
       if (random >= range.min && random <= range.max) {
@@ -134,6 +133,15 @@ export default function Configurator() {
     }
     return { trait_type: category, value: matchedLayer };
   }
+  
+  const generateText = () => {
+    const randomNumber = randomInteger(0, 49);
+    const chatUpLine = gothicChatUpLines[randomNumber];
+    const [setup, punchline] = chatUpLine.split('\n');
+    
+    // Set the state lines with keys of line1 and line2
+    setLines({ line1: setup, line2: punchline });
+  };
 
   const onSubmit = async () => {
     setIsInitialLoad(false);
@@ -144,6 +152,7 @@ export default function Configurator() {
       const randomLayer = getRandomLayer(traits[category], category);
       layers.push(randomLayer);
     }
+    generateText()
     await generateGoth(layers).then((b64) => {
       // ref.current.src = b64;
       setImgSrc(b64);
@@ -175,6 +184,11 @@ export default function Configurator() {
               style={{ marginBottom: "1rem 0 2rem" }}
             >
               {!isInitialLoad && !loading ? (
+                <p id="cardText" className="cardText">{lines.line1}</p>
+              ) : (
+                <></>
+              )}
+              {!isInitialLoad && !loading ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   ref={ref}
@@ -188,7 +202,7 @@ export default function Configurator() {
                 <></>
               )}
               {!isInitialLoad && !loading ? (
-                <p id="cardText" className="cardText">{generateText()}</p>
+                <p id="cardText" className="cardText">{lines.line2}</p>
               ) : (
                 <></>
               )}
