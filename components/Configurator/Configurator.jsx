@@ -90,7 +90,7 @@ export default function Configurator() {
     link.click();
     document.body.removeChild(link);
   };
-  
+
   const saveDivAsImage = () => {
     const cardContainer = document.getElementById("cardContainer");
     html2canvas(cardContainer).then((canvas) => {
@@ -165,142 +165,181 @@ export default function Configurator() {
     <div className={styles.background}>
       <div>
         <div className={styles.container + " " + configuratorStyles.container}>
+          {isInitialLoad && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/goths.gif"
+              className={styles.image}
+              width={300}
+              height={300}
+              alt="Save Goth"
+            />
+          )}
           {generatedImage ? (
             <div>
               <img src={generatedImage} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  margin: "1rem 0",
+                }}
+              >
+                <button
+                  style={{ background: "#cac6cb", display: "block" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSubmit();
+                  }}
+                >
+                  Generate
+                </button>
+                {imgSrc && !generatedImage && !error && (
+                  <button
+                    type="submit"
+                    onClick={saveDivAsImage}
+                    style={{ background: "#cac6cb", display: "block" }}
+                  >
+                    Create Image
+                  </button>
+                )}
+                {generatedImage && (
+                  <button
+                    type="submit"
+                    onClick={downloadImage}
+                    style={{ background: "#cac6cb", display: "block" }}
+                  >
+                    Save Image
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <>
-              {isInitialLoad && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src="/goths.gif"
-                  className={styles.image}
-                  width={300}
-                  height={300}
-                  alt="Save Goth"
-                />
+              {!error && (
+                <>
+                  {!isInitialLoad && (
+                    <div
+                      className={styles.cardContainer}
+                      id="cardContainer"
+                      style={{ marginBottom: "1rem 0 2rem" }}
+                    >
+                      {!isInitialLoad && !loading ? (
+                        <p id="cardText" className="cardText">
+                          {lines.line1}
+                        </p>
+                      ) : (
+                        <></>
+                      )}
+                      {!isInitialLoad && !loading ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          ref={ref}
+                          src={imgSrc}
+                          className={styles.image}
+                          width={300}
+                          height={300}
+                          alt="Save Goth"
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {!isInitialLoad && !loading ? (
+                        <p id="cardText" className="cardText">
+                          {lines.line2}
+                        </p>
+                      ) : (
+                        <></>
+                      )}
+                      {!isInitialLoad && !loading ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <Image
+                          src="/generator/Background/Pink.png"
+                          className={styles.backgroundImage}
+                          alt="Save Goth"
+                          layout="fill"
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      {!isInitialLoad && loading ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <div
+                          style={{
+                            width: 328,
+                            height: 328,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          Loading...
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
+                  )}
+                </>
               )}
-              {!isInitialLoad && (
-                <div
-                  className={styles.cardContainer}
-                  id="cardContainer"
-                  style={{ marginBottom: "1rem 0 2rem" }}
+              {error && (
+                 <div
+                 style={{
+                   width: 328,
+                   height: 328,
+                   display: "flex",
+                   justifyContent: "center",
+                   alignItems: "center",
+                 }}
+               >
+                 Please try again
+               </div>
+              )}
+  
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  margin: "1rem 0",
+                }}
+              >
+                <button
+                  style={{ background: "#cac6cb", display: "block" }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onSubmit();
+                  }}
                 >
-                  {!isInitialLoad && !loading ? (
-                    <p id="cardText" className="cardText">
-                      {lines.line1}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
-                  {!isInitialLoad && !loading ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      ref={ref}
-                      src={imgSrc}
-                      className={styles.image}
-                      width={300}
-                      height={300}
-                      alt="Save Goth"
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {!isInitialLoad && !loading ? (
-                    <p id="cardText" className="cardText">
-                      {lines.line2}
-                    </p>
-                  ) : (
-                    <></>
-                  )}
-                  {!isInitialLoad && !loading ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <Image
-                      src="/generator/Background/Pink.png"
-                      className={styles.backgroundImage}
-                      alt="Save Goth"
-                      layout="fill"
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  {!isInitialLoad && loading ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <div
-                      style={{
-                        width: 328,
-                        height: 328,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      Loading...
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                  {!isInitialLoad && error ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <div
-                      style={{
-                        width: 328,
-                        height: 328,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      Please try again
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              )}
+                  Generate
+                </button>
+                {imgSrc && !generatedImage && !error && (
+                  <button
+                    type="submit"
+                    onClick={saveDivAsImage}
+                    style={{ background: "#cac6cb", display: "block" }}
+                  >
+                    Create Image
+                  </button>
+                )}
+                {generatedImage && (
+                  <button
+                    type="submit"
+                    onClick={downloadImage}
+                    style={{ background: "#cac6cb", display: "block" }}
+                  >
+                    Save Image
+                  </button>
+                )}
+              </div>
             </>
           )}
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              flexDirection: "column",
-              gap: "0.5rem",
-              margin: "1rem 0",
-            }}
-          >
-            <button
-              style={{ background: "#cac6cb", display: "block" }}
-              onClick={(e) => {
-                e.preventDefault();
-                onSubmit();
-              }}
-            >
-              Generate
-            </button>
-            {imgSrc && !generatedImage && (
-              <button
-                type="submit"
-                onClick={saveDivAsImage}
-                style={{ background: "#cac6cb", display: "block" }}
-              >
-                Create Image
-              </button>
-            )}
-            {generatedImage && (
-              <button
-                type="submit"
-                onClick={downloadImage}
-                style={{ background: "#cac6cb", display: "block" }}
-              >
-                Save Image
-              </button>
-            )}
-          </div>
         </div>
       </div>
     </div>
   );
+  
 }
