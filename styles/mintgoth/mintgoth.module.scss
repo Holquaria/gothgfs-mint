@@ -21,10 +21,12 @@
 
     .cardContainer {
         position: relative;
-        width: 600px;
-        height: 300px;
+        width: 500px;
+        height: 500px;
         overflow: hidden;
         display: flex; /* Added for flex items alignment */
+        justify-content: center;
+        flex-direction: column;
         align-items: center; /* Center items vertically */
     }
 
@@ -42,7 +44,6 @@
 
     .cardText {
         color: black;
-        margin-right: 10px;
         z-index: 2;
         position: relative;
         font-family: 'Amador';
