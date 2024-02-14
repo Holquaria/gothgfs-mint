@@ -79,7 +79,15 @@ const gothicChatUpLines = [
 
 const generateText = () => {
   const randomNumber = randomInteger(1, 50);
-  return gothicChatUpLines[randomNumber];
+  const chatUpLine = gothicChatUpLines[randomNumber];
+  const [setup, punchline] = chatUpLine.split('\n');
+  return (
+  <div>
+    <p>{setup}</p>
+    <br />
+    <p>{punchline}</p>
+  </div>
+  );
 };
 
 const categories = Object.keys(traits).reverse();
@@ -150,15 +158,6 @@ export default function Configurator() {
     <div className={styles.background}>
       <div>
         <div className={styles.container + " " + configuratorStyles.container}>
-          <div style={{ transform: "scaleY(-1)", padding: "25px" }}>
-            <Image
-              className={styles.image}
-              width={500}
-              height={107}
-              src={divider}
-              alt="divider"
-            />
-          </div>
           {isInitialLoad && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -189,7 +188,7 @@ export default function Configurator() {
                 <></>
               )}
               {!isInitialLoad && !loading ? (
-                <p className="cardText">{generateText()}</p>
+                <p id="cardText" className="cardText">{generateText()}</p>
               ) : (
                 <></>
               )}
@@ -250,15 +249,6 @@ export default function Configurator() {
                 Download
               </button>
             )}
-          </div>
-          <div style={{ padding: "25px" }}>
-            <Image
-              className={styles.image}
-              width={500}
-              height={107}
-              src={divider}
-              alt="divider"
-            />
           </div>
         </div>
       </div>
