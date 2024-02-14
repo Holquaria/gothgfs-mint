@@ -8,24 +8,6 @@ import { generateGoth } from "./generate-img";
 import html2canvas from "html2canvas";
 import { saveAs } from "file-saver";
 
-const saveDivAsImage = () => {
-  const cardContainer = document.getElementById("cardContainer");
-
-  html2canvas(cardContainer).then((canvas) => {
-    // Convert canvas to data URL
-    const dataUrl = canvas.toDataURL();
-    
-    // Create a temporary link element
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = "card_image.png";
-
-    // Programmatically trigger a click on the link to initiate download
-    link.click();
-  });
-};
-
-
 function randomInteger(min, max) {
   const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
   console.log(randomNumber);
@@ -85,30 +67,41 @@ const gothicChatUpLines = [
   "Are you a ghost?\nBecause you've been haunting my thoughts all night long.",
 ];
 
-
 const categories = Object.keys(traits).reverse();
 
 const blacklist = ["Eyes Base", "Base"];
 const selectableCategories = categories.filter((c) => !blacklist.includes(c));
 
-const downloadImage = (src) => {
-  var a = document.createElement("a");
-  a.href = src;
-  a.download = `goth-gf.png`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-};
+
 export default function Configurator() {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imgSrc, setImgSrc] = useState("");
-  const [lines, setLines] = useState({line1: "", line2: ""})
-  const [error, setError] = useState(false)
+  const [lines, setLines] = useState({ line1: "", line2: "" });
+  const [error, setError] = useState(false);
   const ref = useRef(null);
+  const [generatedImage, setGeneratedImage] = useState(null);
+  
+  const downloadImage = () => {
+    const link = document.createElement("a");
+    link.href = generatedImage;
+    link.download = "generated_image.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  
+  const saveDivAsImage = () => {
+    const cardContainer = document.getElementById("cardContainer");
+    html2canvas(cardContainer).then((canvas) => {
+      const imageData = canvas.toDataURL();
+      setGeneratedImage(imageData);
+    });
+  };
+
   function getRandomLayer(data, category) {
     let matchedLayer = "None";
-    
+
     const dataWithRanges = {};
     let lastValue = 0;
     for (const section of Object.keys(data)) {
@@ -121,10 +114,8 @@ export default function Configurator() {
       lastValue = data[section] + lastValue;
     }
 
-    
-    
     const random = Math.random();
-    
+
     for (const section of Object.keys(dataWithRanges)) {
       const range = dataWithRanges[section];
       if (random >= range.min && random <= range.max) {
@@ -134,19 +125,20 @@ export default function Configurator() {
     }
     return { trait_type: category, value: matchedLayer };
   }
-  
+
   const generateText = () => {
     const randomNumber = randomInteger(0, 49);
     const chatUpLine = gothicChatUpLines[randomNumber];
-    const [setup, punchline] = chatUpLine.split('\n');
-    
+    const [setup, punchline] = chatUpLine.split("\n");
+
     // Set the state lines with keys of line1 and line2
     setLines({ line1: setup, line2: punchline });
   };
 
   const onSubmit = async () => {
+    setGeneratedImage(null);
     setIsInitialLoad(false);
-    setError(false)
+    setError(false);
     setLoading(true);
     document.body.style.cursor = "wait";
     const layers = [];
@@ -154,14 +146,16 @@ export default function Configurator() {
       const randomLayer = getRandomLayer(traits[category], category);
       layers.push(randomLayer);
     }
-    generateText()
-    await generateGoth(layers).then((b64) => {
-      // ref.current.src = b64;
-      setImgSrc(b64);
-      document.body.style.cursor = "unset";
-    }).catch((err) => {
-      setError(true)
-    })
+    generateText();
+    await generateGoth(layers)
+      .then((b64) => {
+        // ref.current.src = b64;
+        setImgSrc(b64);
+        document.body.style.cursor = "unset";
+      })
+      .catch((err) => {
+        setError(true);
+      });
     setLoading(false);
   };
 
@@ -171,89 +165,101 @@ export default function Configurator() {
     <div className={styles.background}>
       <div>
         <div className={styles.container + " " + configuratorStyles.container}>
-          {isInitialLoad && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src="/goths.gif"
-              className={styles.image}
-              width={300}
-              height={300}
-              alt="Save Goth"
-            />
-          )}
-          {!isInitialLoad && (
-            <div
-              className={styles.cardContainer}
-              id="cardContainer"
-              style={{ marginBottom: "1rem 0 2rem" }}
-            >
-              {!isInitialLoad && !loading ? (
-                <p id="cardText" className="cardText">{lines.line1}</p>
-              ) : (
-                <></>
-              )}
-              {!isInitialLoad && !loading ? (
+          {generatedImage ? (
+            <div>
+              <img src={generatedImage} />
+            </div>
+          ) : (
+            <>
+              {isInitialLoad && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  ref={ref}
-                  src={imgSrc}
+                  src="/goths.gif"
                   className={styles.image}
                   width={300}
                   height={300}
                   alt="Save Goth"
                 />
-              ) : (
-                <></>
               )}
-              {!isInitialLoad && !loading ? (
-                <p id="cardText" className="cardText">{lines.line2}</p>
-              ) : (
-                <></>
-              )}
-              {!isInitialLoad && !loading ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <Image
-                  src="/generator/Background/Pink.png"
-                  className={styles.backgroundImage}
-                  alt="Save Goth"
-                  layout="fill"
-                />
-              ) : (
-                <></>
-              )}
-              {!isInitialLoad && loading ? (
-                // eslint-disable-next-line @next/next/no-img-element
+              {!isInitialLoad && (
                 <div
-                  style={{
-                    width: 328,
-                    height: 328,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
+                  className={styles.cardContainer}
+                  id="cardContainer"
+                  style={{ marginBottom: "1rem 0 2rem" }}
                 >
-                  Loading...
+                  {!isInitialLoad && !loading ? (
+                    <p id="cardText" className="cardText">
+                      {lines.line1}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+                  {!isInitialLoad && !loading ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      ref={ref}
+                      src={imgSrc}
+                      className={styles.image}
+                      width={300}
+                      height={300}
+                      alt="Save Goth"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {!isInitialLoad && !loading ? (
+                    <p id="cardText" className="cardText">
+                      {lines.line2}
+                    </p>
+                  ) : (
+                    <></>
+                  )}
+                  {!isInitialLoad && !loading ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <Image
+                      src="/generator/Background/Pink.png"
+                      className={styles.backgroundImage}
+                      alt="Save Goth"
+                      layout="fill"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  {!isInitialLoad && loading ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <div
+                      style={{
+                        width: 328,
+                        height: 328,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      Loading...
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  {!isInitialLoad && error ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <div
+                      style={{
+                        width: 328,
+                        height: 328,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      Please try again
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </div>
-              ) : (
-                <></>
               )}
-              {!isInitialLoad && error ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <div
-                  style={{
-                    width: 328,
-                    height: 328,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  Please try again
-                </div>
-              ) : (
-                <></>
-              )}
-            </div>
+            </>
           )}
 
           <div
@@ -274,13 +280,22 @@ export default function Configurator() {
             >
               Generate
             </button>
-            {imgSrc && (
+            {imgSrc && !generatedImage && (
               <button
                 type="submit"
                 onClick={saveDivAsImage}
                 style={{ background: "#cac6cb", display: "block" }}
               >
-                Download
+                Create Image
+              </button>
+            )}
+            {generatedImage && (
+              <button
+                type="submit"
+                onClick={downloadImage}
+                style={{ background: "#cac6cb", display: "block" }}
+              >
+                Save Image
               </button>
             )}
           </div>
