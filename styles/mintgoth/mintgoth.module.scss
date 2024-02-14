@@ -5,7 +5,8 @@
 
 }
 
-.container{
+.container {
+    position: relative;
     display: flex;
     flex-flow: column;
     align-items: center;
@@ -15,12 +16,37 @@
     line-height: 13px;
     text-align: center;
     padding: 10px;
-    color:red;
+    color: red;
+    z-index: 1;
 
-    .image{
+    .cardContainer {
+        position: relative;
+        width: 600px;
+        height: 300px;
+        overflow: hidden;
+        display: flex; /* Added for flex items alignment */
+        align-items: center; /* Center items vertically */
+    }
+
+    .backgroundImage {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    .image {
         margin: 14px;
+        z-index: 3;
+    }
+
+    .cardText {
+        margin-right: 10px;
+        z-index: 2;
+        position: relative;
     }
 }
+
 
 .save{
     font-size:24px;
